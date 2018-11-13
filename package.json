@@ -11,12 +11,16 @@
     "mongoose": "^5.3.10"
   },
   "devDependencies": {
-    "mocha": "^5.2.0",
-    "nodemon": "^1.18.6"
+    "chai": "^4.2.0",
+    "jest": "^23.6.0",
+    "nodemon": "^1.18.6",
+    "sinon": "^7.1.1",
+    "sinon-mongoose": "^2.2.1",
+    "supertest": "^3.3.0"
   },
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "test": "mocha"
+    "test": "jest"
   }
 }

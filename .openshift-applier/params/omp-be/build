@@ -1,0 +1,4 @@
+NAME=omp-be
+PIPELINE_SOURCE_REPOSITORY_URL=https://github.com/logandonley/omp-be
+PIPELINE_SOURCE_REPOSITORY_REF=node
+S2I_BASE_IMAGE=nodejs:10
