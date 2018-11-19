@@ -1,8 +1,0 @@
-- name: Deploy OMP-BE
-  hosts: localhost
-  vars:
-    ci_cd_namespace: omp-ci-cd
-    dev_namespace: omp-dev
-  tasks:
-    - include_role:
-        name: openshift-applier/roles/openshift-applier

@@ -1,6 +1,6 @@
----
 ansible_connection: local
-
+ci_cd_namespace: "omp-ci-cd"
+dev_namespace: "omp-dev"
 openshift_cluster_content:
   - object: projectrequest
     content:
@@ -16,13 +16,11 @@ openshift_cluster_content:
     content:
       - name: omp-be-build
         template: "https://raw.githubusercontent.com/rht-labs/labs-ci-cd/v3.10.0/openshift-templates/s2i-app-build/template-no-secrets.yml"
-        action: apply
         params: "{{ inventory_dir }}/../params/omp-be/build"
-        namespace: "omp-ci-cd"
+        namespace: "{{ ci_cd_namespace }}"
   - object: app-deploy
     content:
       - name: omp-be-deploy-dev
         template: "https://raw.githubusercontent.com/rht-labs/labs-ci-cd/v3.10.0/openshift-templates/http-app-deploy/template.yml"
-        action: apply
         params: "{{ inventory_dir }}/../params/omp-be/deploy-dev"
-        namespace: "omp-dev"
+        namespace: "{{ dev_namespace }}"
