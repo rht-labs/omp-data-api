@@ -43,8 +43,8 @@ objects:
         containers:
         - envFrom:
             - secretRef:
-                name: mongo
-        - image: "${NAME}"
+                name: "${DB_SECRET}"
+          image: "${NAME}"
           imagePullPolicy: Always
           name: "${NAME}"
           ports:
@@ -123,6 +123,11 @@ parameters:
 - name: PIPELINES_NAMESPACE
   displayName: Project/Namespace for Jenkins Pipelines
   description: The project/namespace where the Jenkins executing pipelines is deployed.
+  required: true
+- name: DB_SECRET
+  displayName: Database Secret
+  description: Database secret name to pull environment variables from.
+  value: mongo
   required: true
 labels:
   template: omp-be-deploy-template
