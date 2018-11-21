@@ -21,6 +21,6 @@ openshift_cluster_content:
   - object: app-deploy
     content:
       - name: omp-be-deploy-dev
-        template: "https://raw.githubusercontent.com/rht-labs/labs-ci-cd/v3.10.0/openshift-templates/http-app-deploy/template.yml"
+        template: "{{ inventory_dir }}/../templates/omp-be/deploy.yml"
         params: "{{ inventory_dir }}/../params/omp-be/deploy-dev"
         namespace: "{{ dev_namespace }}"
