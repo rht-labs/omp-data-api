@@ -1,24 +1,18 @@
-const User = require("../models/user.model.js");
+const Group = require("../../models/v1/group.model.js");
 
 exports.create = (req, res) => {
   if (!req.body) {
     return res.status(400).send({
-      message: "User content can't be empty"
+      message: "Group content can't be empty"
     });
   }
-  const user = new User({
-    user_name: req.body.user_name.toLowerCase(),
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
-    expiration_date: req.body.expiration_date,
-    email: req.body.email.toLowerCase(),
-    role: req.body.role.toLowerCase(),
-    identity_providers: req.body.identity_providers,
-    groups: req.body.groups,
-    customers: req.body.customers
+  const group = new Group({
+    group_name: req.body.group_name.toLowerCase(),
+    display_name: req.body.display_name,
+    role: req.body.role.toLowerCase()
   });
 
-  user
+  group
     .save()
     .then(data => {
       res.send(data);
@@ -31,7 +25,7 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  User.find({})
+  Group.find({})
     .then(data => {
       res.send(data);
     })
@@ -43,13 +37,13 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-  if (!req.params.user_name) {
+  if (!req.params.group_name) {
     res.status(400).send({
       message: "You must provide an environment id parameter."
     });
     return;
   }
-  User.find({ user_name: req.params.user_name.toLowerCase() })
+  Group.find({ group_name: req.params.group_name.toLowerCase() })
     .then(data => {
       res.send(data);
     })
@@ -61,13 +55,13 @@ exports.findOne = (req, res) => {
 };
 
 exports.update = (req, res) => {
-  if (!req.params.user_name) {
+  if (!req.params.group_name) {
     res.status(400).send({
       message: "You must provide an environment id parameter."
     });
     return;
   }
-  User.updateOne({ user_name: req.params.user_name.toLowerCase() }, req.body)
+  Group.updateOne({ group_name: req.params.group_name.toLowerCase() }, req.body)
     .then(data => {
       res.send(data);
     })
@@ -79,13 +73,13 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  if (!req.params.user_name) {
+  if (!req.params.group_name) {
     res.status(400).send({
       message: "You must provide an environment id parameter."
     });
     return;
   }
-  User.deleteOne({ user_name: req.params.user_name.toLowerCase() })
+  Group.deleteOne({ group_name: req.params.group_name.toLowerCase() })
     .then(data => {
       res.send(data);
     })

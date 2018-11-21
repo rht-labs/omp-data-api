@@ -1,4 +1,4 @@
-const Customer = require("../models/customer.model.js");
+const Customer = require("../../models/v1/customer.model.js");
 
 exports.create = (req, res) => {
   if (!req.body) {

@@ -1,54 +1,24 @@
-const Cluster = require("../models/cluster.model.js");
+const User = require("../../models/v1/user.model.js");
 
 exports.create = (req, res) => {
   if (!req.body) {
     return res.status(400).send({
-      message: "Cluster content can't be empty"
+      message: "User content can't be empty"
     });
   }
-  let size = {};
-  switch (req.body.size) {
-    case "SMALL":
-      size = {
-        master_node: 1,
-        infra_node: 1,
-        app_node: 2
-      };
-      break;
-    case "MEDIUM":
-      size = {
-        master_node: 1,
-        infra_node: 1,
-        app_node: 3
-      };
-      break;
-    case "LARGE":
-      size = {
-        master_node: 1,
-        infra_node: 1,
-        app_node: 5
-      };
-      break;
-    default:
-      size = {
-        master_node: 1,
-        infra_node: 1,
-        app_node: 3
-      };
-      break;
-  }
-  const cluster = new Cluster({
-    env_id: req.body.env_id.toLowerCase(),
-    customer_id: req.body.customer_id.toLowerCase(),
-    logging: req.body.logging,
-    metrics: req.body.metrics,
-    size: size,
-    ha: req.body.ha,
-    ocp_version: req.body.ocp_version,
-    hosting_platform: req.body.hosting_platform
+  const user = new User({
+    user_name: req.body.user_name.toLowerCase(),
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
+    expiration_date: req.body.expiration_date,
+    email: req.body.email.toLowerCase(),
+    role: req.body.role.toLowerCase(),
+    identity_providers: req.body.identity_providers,
+    groups: req.body.groups,
+    customers: req.body.customers
   });
 
-  cluster
+  user
     .save()
     .then(data => {
       res.send(data);
@@ -61,7 +31,7 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  Cluster.find({})
+  User.find({})
     .then(data => {
       res.send(data);
     })
@@ -73,13 +43,13 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-  if (!req.params.env_id) {
+  if (!req.params.user_name) {
     res.status(400).send({
       message: "You must provide an environment id parameter."
     });
     return;
   }
-  Cluster.find({ env_id: req.params.env_id.toLowerCase() })
+  User.find({ user_name: req.params.user_name.toLowerCase() })
     .then(data => {
       res.send(data);
     })
@@ -91,13 +61,13 @@ exports.findOne = (req, res) => {
 };
 
 exports.update = (req, res) => {
-  if (!req.params.env_id) {
+  if (!req.params.user_name) {
     res.status(400).send({
       message: "You must provide an environment id parameter."
     });
     return;
   }
-  Cluster.updateOne({ env_id: req.params.env_id.toLowerCase() }, req.body)
+  User.updateOne({ user_name: req.params.user_name.toLowerCase() }, req.body)
     .then(data => {
       res.send(data);
     })
@@ -109,13 +79,13 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  if (!req.params.env_id) {
+  if (!req.params.user_name) {
     res.status(400).send({
       message: "You must provide an environment id parameter."
     });
     return;
   }
-  Cluster.deleteOne({ env_id: req.params.env_id.toLowerCase() })
+  User.deleteOne({ user_name: req.params.user_name.toLowerCase() })
     .then(data => {
       res.send(data);
     })

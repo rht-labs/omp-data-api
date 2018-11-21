@@ -3,7 +3,7 @@ const express = require("express");
 const sinon = require("sinon");
 require("sinon-mongoose");
 
-const User = require("../src/models/user.model");
+const User = require("../src/models/v1/user.model");
 
 describe("/user", () => {
   const app = express();

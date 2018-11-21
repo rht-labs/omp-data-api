@@ -3,7 +3,7 @@ const express = require("express");
 const sinon = require("sinon");
 require("sinon-mongoose");
 
-const Group = require("../src/models/group.model");
+const Group = require("../src/models/v1/group.model");
 
 describe("/groups", () => {
   const app = express();

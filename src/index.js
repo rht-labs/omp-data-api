@@ -29,11 +29,17 @@ mongoose
     process.exit();
   });
 
-app.get("/", (req, res) => res.send(`Hello!`));
+// Health check
+app.get("/", (req, res) =>
+  res.send({
+    OK: true
+  })
+);
 
-require("./routes/user.routes")(app);
-require("./routes/group.routes")(app);
-require("./routes/customer.routes")(app);
-require("./routes/cluster.routes")(app);
+// Import v1 routes
+require("./routes/v1/user.routes")(app);
+require("./routes/v1/group.routes")(app);
+require("./routes/v1/customer.routes")(app);
+require("./routes/v1/cluster.routes")(app);
 
 app.listen(port, () => console.log(`App listening on port ${port}`));
