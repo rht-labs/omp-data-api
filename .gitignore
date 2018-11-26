@@ -32,4 +32,7 @@ benchmarks/graphs
 # VS Code settings
 .vscode
 
+# IntelliJ settings
+.idea
+
 roles
