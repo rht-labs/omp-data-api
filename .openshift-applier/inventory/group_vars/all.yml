@@ -1,0 +1,26 @@
+ansible_connection: local
+ci_cd_namespace: "omp-ci-cd"
+dev_namespace: "omp-dev"
+openshift_cluster_content:
+  - object: projectrequest
+    content:
+      - name: ci-cd-project
+        template: "https://raw.githubusercontent.com/redhat-cop/cluster-lifecycle/v3.10.0/files/projectrequest/template.yml"
+        action: create
+        params: "{{ inventory_dir }}/../params/projectrequests/ci-cd"
+      - name: dev-project
+        template: "https://raw.githubusercontent.com/redhat-cop/cluster-lifecycle/v3.10.0/files/projectrequest/template.yml"
+        action: create
+        params: "{{ inventory_dir }}/../params/projectrequests/dev"
+  - object: app-build
+    content:
+      - name: omp-be-build
+        template: "https://raw.githubusercontent.com/rht-labs/labs-ci-cd/v3.10.0/openshift-templates/s2i-app-build/template-no-secrets.yml"
+        params: "{{ inventory_dir }}/../params/omp-be/build"
+        namespace: "{{ ci_cd_namespace }}"
+  - object: app-deploy
+    content:
+      - name: omp-be-deploy-dev
+        template: "{{ inventory_dir }}/../templates/omp-be/deploy.yml"
+        params: "{{ inventory_dir }}/../params/omp-be/deploy-dev"
+        namespace: "{{ dev_namespace }}"

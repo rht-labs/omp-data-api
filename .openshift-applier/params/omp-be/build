@@ -1,0 +1,4 @@
+NAME=omp-be
+PIPELINE_SOURCE_REPOSITORY_URL=https://github.com/rht-labs/omp-be
+PIPELINE_SOURCE_REPOSITORY_REF=master
+S2I_BASE_IMAGE=nodejs:10
