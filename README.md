@@ -1,4 +1,8 @@
-# Open Management Portal - Back End
+# Open Management Portal - Data API
+
+## Architecture
+
+![Data API architecture](./images/omp-data-api-architecture-v0.1.png)
 
 ## How to deploy on OpenShift Container Platform
 
