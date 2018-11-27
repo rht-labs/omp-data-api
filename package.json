@@ -11,7 +11,8 @@
     "express-joi-validation": "^0.3.0",
     "joi": "^14.3.0",
     "mongodb": "^3.1.9",
-    "mongoose": "^5.3.10"
+    "mongoose": "^5.3.10",
+    "swagger-ui-express": "^4.0.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",

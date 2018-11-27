@@ -35,6 +35,12 @@ app.get("/", (req, res) =>
   })
 );
 
+var swaggerUi = require('swagger-ui-express'), swaggerDocument = require('./swagger.json');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+//app.use('/api/v1', router);
+
+
 // Import v1 routes
 require("./routes/v1/routes")(app);
 
