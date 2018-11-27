@@ -1,9 +1,9 @@
 {
-  "name": "omp-be",
+  "name": "omp-data-api",
   "version": "0.1.0",
-  "description": "Open Management Portal Backend",
+  "description": "Open Management Portal Data API",
   "main": "src/index.js",
-  "repository": "git@github.com:rht-labs/omp-be.git",
+  "repository": "git@github.com:rht-labs/omp-data-api.git",
   "license": "Apache",
   "dependencies": {
     "body-parser": "^1.18.3",
