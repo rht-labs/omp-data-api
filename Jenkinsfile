@@ -8,14 +8,16 @@ node('master') {
   env.TOKEN = readFile('/var/run/secrets/kubernetes.io/serviceaccount/token').trim()
   env.OC_CMD = "oc --token=${env.TOKEN} --server=${ocpApiServer} --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt --namespace=${env.NAMESPACE}"
 
-  env.APP_NAME = "omp-be"
+  def groupVars = readYaml file: '.openshift-applier/inventory/group_vars/all.yml'
+  env.APP_NAME = """${groupVars.app_name}"""
+  
   println "Starting Pipeline for Application: ${APP_NAME}"
   println "${env.JOB_NAME}, ${env.NAMESPACE}"
-  def projectBase = "omp"
-  env.STAGE0 = "${projectBase}-ci-cd"
-  env.STAGE1 = "${projectBase}-dev"
-  // env.STAGE2 = "${projectBase}-stage"
-  // env.STAGE3 = "${projectBase}-prod"
+  
+  env.STAGE0 = """${groupVars.ci_cd_namespace}"""
+  env.STAGE1 = """${groupVars.dev_namespace}"""
+  // env.STAGE2 = """${groupVars.stage_namespace}"""
+  // env.STAGE3 = """${groupVars.prod_namespace}"""
 }
 
 node('nodejs') {
