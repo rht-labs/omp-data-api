@@ -1,8 +1,27 @@
 const prefix = require("./prefix");
-module.exports = app => {
-  const users = require("../../controllers/v1/user.controller.js");
+const users = require("../../controllers/v1/user.controller.js");
+const Joi = require('joi')
+const validator = require('express-joi-validation')({})
 
-  app.post(`${prefix}/users`, users.create);
+const userSchema = Joi.object({
+  username: Joi.string().min(2).max(50).required(),
+  first_name: Joi.string().min(2).max(50).required(),
+  last_name: Joi.string().min(2).max(50).required(),
+  expiration_date: Joi.date(),
+  email: Joi.string().email().required(),
+  role: Joi.string(),
+  identity_providers: Joi.array().items(Joi.object().keys({
+    provider: Joi.string(),
+    created: Joi.boolean(),
+    notified: Joi.boolean()
+  })),
+  groups: Joi.array().items(Joi.string()),
+  customers: Joi.array().items(Joi.string())
+})
+
+module.exports = app => {
+
+  app.post(`${prefix}/users`, validator.body(userSchema), users.create);
 
   app.get(`${prefix}/users`, users.findAll);
 

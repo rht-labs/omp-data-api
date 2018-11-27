@@ -1,11 +1,23 @@
 const Cluster = require("../../models/v1/cluster.model.js");
-const { checkSchema } = require("express-validator/check");
 
 exports.create = (req, res) => {
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   return res.status(422).json({ errors: errors.array() });
-  // }
+  // Set defaults
+  if (!req.body.customer_id) {
+    req.body.customer_id = ''
+  }
+  if (!req.body.logging) {
+    req.body.logging = false
+  }
+  if (!req.body.metrics) {
+    req.body.metrics = false
+  }
+  if (!req.body.size) {
+    req.body.metrics = ''
+  }
+  if (!req.body.ha) {
+    req.body.metrics = false
+  }
+  // Switch for size string
   let size = {};
   switch (req.body.size) {
     case "SMALL":
@@ -47,7 +59,6 @@ exports.create = (req, res) => {
     ocp_version: req.body.ocp_version,
     hosting_platform: req.body.hosting_platform
   });
-
   cluster
     .save()
     .then(data => {
@@ -79,7 +90,9 @@ exports.findOne = (req, res) => {
     });
     return;
   }
-  Cluster.find({ env_id: req.params.env_id.toLowerCase() })
+  Cluster.find({
+      env_id: req.params.env_id.toLowerCase()
+    })
     .then(data => {
       res.send(data);
     })
@@ -97,7 +110,9 @@ exports.update = (req, res) => {
     });
     return;
   }
-  Cluster.updateOne({ env_id: req.params.env_id.toLowerCase() }, req.body)
+  Cluster.updateOne({
+      env_id: req.params.env_id.toLowerCase()
+    }, req.body)
     .then(data => {
       res.send(data);
     })
@@ -115,7 +130,9 @@ exports.delete = (req, res) => {
     });
     return;
   }
-  Cluster.deleteOne({ env_id: req.params.env_id.toLowerCase() })
+  Cluster.deleteOne({
+      env_id: req.params.env_id.toLowerCase()
+    })
     .then(data => {
       res.send(data);
     })

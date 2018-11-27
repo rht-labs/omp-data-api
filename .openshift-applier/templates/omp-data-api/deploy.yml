@@ -4,7 +4,7 @@ apiVersion: v1
 metadata:
   name: http-app-deploy
   annotations:
-    openshift.io/display-name: omp-be deploy
+    openshift.io/display-name: omp-data-api deploy
     description: A template to deploy open management portal backend
     iconClass: icon-cube
 objects:
@@ -130,4 +130,4 @@ parameters:
   value: mongo
   required: true
 labels:
-  template: omp-be-deploy-template
+  template: omp-data-api-deploy-template
