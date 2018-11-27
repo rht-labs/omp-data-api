@@ -1,10 +1,15 @@
 const Customer = require("../../models/v1/customer.model.js");
 
 exports.create = (req, res) => {
-  if (!req.body) {
-    return res.status(400).send({
-      message: "Customer content can't be empty"
-    });
+  // Set defaults
+  if (!req.body.cluster_url) {
+    req.body.cluster_url = ''
+  }
+  if (!req.body.atlassian_url) {
+    req.body.cluster_url = ''
+  }
+  if (!req.body.source_control) {
+    req.body.source_control = ''
   }
   const customer = new Customer({
     customer_id: req.body.customer_id.toLowerCase(),
@@ -47,7 +52,9 @@ exports.findOne = (req, res) => {
     });
     return;
   }
-  Customer.find({ customer_id: req.params.customer_id.toLowerCase() })
+  Customer.find({
+      customer_id: req.params.customer_id.toLowerCase()
+    })
     .then(data => {
       res.send(data);
     })
@@ -65,10 +72,11 @@ exports.update = (req, res) => {
     });
     return;
   }
-  Customer.updateOne(
-    { customer_id: req.params.customer_id.toLowerCase() },
-    req.body
-  )
+  Customer.updateOne({
+        customer_id: req.params.customer_id.toLowerCase()
+      },
+      req.body
+    )
     .then(data => {
       res.send(data);
     })
@@ -86,7 +94,9 @@ exports.delete = (req, res) => {
     });
     return;
   }
-  Customer.deleteOne({ customer_id: req.params.customer_id.toLowerCase() })
+  Customer.deleteOne({
+      customer_id: req.params.customer_id.toLowerCase()
+    })
     .then(data => {
       res.send(data);
     })

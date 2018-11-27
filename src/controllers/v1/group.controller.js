@@ -1,11 +1,6 @@
 const Group = require("../../models/v1/group.model.js");
 
 exports.create = (req, res) => {
-  if (!req.body) {
-    return res.status(400).send({
-      message: "Group content can't be empty"
-    });
-  }
   const group = new Group({
     group_name: req.body.group_name.toLowerCase(),
     display_name: req.body.display_name,
@@ -43,7 +38,9 @@ exports.findOne = (req, res) => {
     });
     return;
   }
-  Group.find({ group_name: req.params.group_name.toLowerCase() })
+  Group.find({
+      group_name: req.params.group_name.toLowerCase()
+    })
     .then(data => {
       res.send(data);
     })
@@ -61,7 +58,9 @@ exports.update = (req, res) => {
     });
     return;
   }
-  Group.updateOne({ group_name: req.params.group_name.toLowerCase() }, req.body)
+  Group.updateOne({
+      group_name: req.params.group_name.toLowerCase()
+    }, req.body)
     .then(data => {
       res.send(data);
     })
@@ -79,7 +78,9 @@ exports.delete = (req, res) => {
     });
     return;
   }
-  Group.deleteOne({ group_name: req.params.group_name.toLowerCase() })
+  Group.deleteOne({
+      group_name: req.params.group_name.toLowerCase()
+    })
     .then(data => {
       res.send(data);
     })

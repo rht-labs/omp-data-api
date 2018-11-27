@@ -1,3 +1,0 @@
-NAME=omp-be
-PIPELINES_NAMESPACE=omp-ci-cd
-DB_SECRET=mongo

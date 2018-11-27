@@ -1,11 +1,23 @@
 const User = require("../../models/v1/user.model.js");
 
 exports.create = (req, res) => {
-  if (!req.body) {
-    return res.status(400).send({
-      message: "User content can't be empty"
-    });
+  // Set defaults
+  if (!req.body.role) {
+    req.body.role = ''
   }
+  if (!req.body.identity_providers) {
+    req.body.identity_providers = []
+  }
+  if (!req.body.groups) {
+    req.body.groups = []
+  }
+  if (!req.body.customers) {
+    req.body.customers = []
+  }
+  if (!req.body.expiration_date) {
+    req.body.expiration_date = ''
+  }
+
   const user = new User({
     user_name: req.body.user_name.toLowerCase(),
     first_name: req.body.first_name,
@@ -17,7 +29,6 @@ exports.create = (req, res) => {
     groups: req.body.groups,
     customers: req.body.customers
   });
-
   user
     .save()
     .then(data => {
@@ -49,7 +60,9 @@ exports.findOne = (req, res) => {
     });
     return;
   }
-  User.find({ user_name: req.params.user_name.toLowerCase() })
+  User.find({
+      user_name: req.params.user_name.toLowerCase()
+    })
     .then(data => {
       res.send(data);
     })
@@ -67,7 +80,9 @@ exports.update = (req, res) => {
     });
     return;
   }
-  User.updateOne({ user_name: req.params.user_name.toLowerCase() }, req.body)
+  User.updateOne({
+      user_name: req.params.user_name.toLowerCase()
+    }, req.body)
     .then(data => {
       res.send(data);
     })
@@ -85,7 +100,9 @@ exports.delete = (req, res) => {
     });
     return;
   }
-  User.deleteOne({ user_name: req.params.user_name.toLowerCase() })
+  User.deleteOne({
+      user_name: req.params.user_name.toLowerCase()
+    })
     .then(data => {
       res.send(data);
     })
