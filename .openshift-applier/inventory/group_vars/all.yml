@@ -1,0 +1,57 @@
+---
+ansible_connection: local
+
+app_name: "omp-data-api"
+ci_cd_namespace: "omp-ci-cd"
+dev_namespace: "omp-dev"
+
+ci_cd:
+  NAMESPACE: "{{ ci_cd_namespace }}"
+  NAMESPACE_DISPLAY_NAME: "{{ app_name }} CI/CD"
+
+dev:
+  NAMESPACE: "{{ dev_namespace }}"
+  NAMESPACE_DISPLAY_NAME: "{{ app_name }} Dev"
+  
+build:
+  NAME: "{{ app_name }}"
+  PIPELINE_SOURCE_REPOSITORY_URL: https://github.com/rht-labs/omp-data-api
+  PIPELINE_SOURCE_REPOSITORY_REF: master
+  S2I_BASE_IMAGE: nodejs:10
+
+deploy:
+  NAME: "{{ app_name }}"
+  PIPELINES_NAMESPACE: "{{ ci_cd_namespace }}"
+  DB_SECRET: mongo #TODO: does this need to be an encrypted secret?
+
+openshift_cluster_content:
+  - object: projectrequest
+    content:
+      - name: "{{ ci_cd_namespace }}-project"
+        template: "https://raw.githubusercontent.com/redhat-cop/cluster-lifecycle/v3.10.0/files/projectrequest/template.yml"
+        action: create
+        params_from_vars: "{{ ci_cd }}"
+        tags:
+          - projectrequest
+      - name: "{{ dev_namespace }}-project"
+        template: "https://raw.githubusercontent.com/redhat-cop/cluster-lifecycle/v3.10.0/files/projectrequest/template.yml"
+        action: create
+        params_from_vars: "{{ dev }}"
+        tags:
+          - projectrequest
+  - object: app-build
+    content:
+      - name: "{{ app_name }}-build"
+        template: "https://raw.githubusercontent.com/rht-labs/labs-ci-cd/v3.10.0/openshift-templates/s2i-app-build/template-no-secrets.yml"
+        params_from_vars: "{{ build }}"
+        namespace: "{{ ci_cd_namespace }}"
+        tags:
+          - app-build
+  - object: app-deploy
+    content:
+      - name: "{{ app_name }}-deploy-{{ dev_namespace }}"
+        template: "{{ inventory_dir }}/../templates/omp-data-api/deploy.yml"
+        params_from_vars: "{{ deploy }}"
+        namespace: "{{ dev_namespace }}"
+        tags:
+          - app-deploy
