@@ -22,7 +22,16 @@ build:
 deploy:
   NAME: "{{ app_name }}"
   PIPELINES_NAMESPACE: "{{ ci_cd_namespace }}"
-  DB_SECRET: mongo #TODO: does this need to be an encrypted secret?
+  DB_SECRET: "{{ app_name }}-db" #TODO: does this need to be an encrypted secret?
+
+db_deploy:
+  APP_NAME: "{{ app_name }}-db"
+  MONGODB_USER: "omp-user"
+  MONGODB_DATABASE: "{{ app_name }}"
+  MONGODB_VERSION: "3.4"
+  VOLUME_CAPACITY: "5Gi"
+  MEMORY_LIMIT: "512Mi"
+  IMAGESTREAM_NAMESPACE: "openshift" 
 
 openshift_cluster_content:
   - object: projectrequest
@@ -55,3 +64,12 @@ openshift_cluster_content:
         namespace: "{{ dev_namespace }}"
         tags:
           - app-deploy
+
+  - object: db-deploy
+    content:
+      - name: "{{ app_name }}-db-deploy-{{ dev_namespace }}"
+        template: "{{ inventory_dir }}/../templates/omp-db/deploy.yml"
+        params_from_vars: "{{ db_deploy }}"
+        namespace: "{{ dev_namespace }}"
+        tags:
+        - db-deploy
