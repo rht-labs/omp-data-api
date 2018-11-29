@@ -44,18 +44,13 @@ describe("/clusters", () => {
   it("create a new cluster", () => {
     var ClusterMock = sinon.mock(
       new Cluster({
-        env_id: "c1001",
-        customer_id: "c1001",
         logging: false,
         metrics: false,
-        size: {
-          master_node: 1,
-          app_node: 3,
-          infra_node: 1
-        },
+        size: "SMALL",
         ha: false,
         ocp_version: "v3.11.0",
-        hosting_platform: "osp"
+        hosting_platform: "osp",
+        tags: ["test1", "test2"]
       })
     );
     const cluster = ClusterMock.object;

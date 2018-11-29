@@ -7,7 +7,7 @@ const User = require("../src/models/v1/user.model");
 
 describe("/user", () => {
   const app = express();
-  require("../src/routes/user.routes")(app);
+  require("../src/routes/v1/user.routes")(app);
   it("should work", () => {
     const request = supertest(app);
     let test = request
@@ -49,16 +49,10 @@ describe("/user", () => {
         last_name: "User",
         expiration_date: Date.now(),
         email: "testuser@Example.com",
-        role: "developer",
-        identity_providers: [
-          {
-            provider: "IdM",
-            created: false,
-            notified: false
-          }
-        ],
-        groups: ["testgroup"],
-        customers: ["customer123"]
+        identity_providers: {
+          "anything_can_be_here!": "see_anything!"
+        },
+        tags: ["test1", "test2"]
       })
     );
     const user = UserMock.object;

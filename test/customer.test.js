@@ -7,7 +7,7 @@ const Customer = require("../src/models/v1/customer.model");
 
 describe("/customers", () => {
   const app = express();
-  require("../src/routes/customer.routes")(app);
+  require("../src/routes/v1/customer.routes")(app);
   it("should work", () => {
     const request = supertest(app);
     let test = request
@@ -44,13 +44,8 @@ describe("/customers", () => {
   it("create a new customer", () => {
     var CustomerMock = sinon.mock(
       new Customer({
-        customer_id: "c1001",
         customer_name: "Super Real Customer",
-        start_date: Date.now(),
-        end_date: Date.now() + 2629800000,
-        cluster_url: "https://console.test.example.com",
-        atlassian_url: "https://atlassian.example.com",
-        source_control: "gitlab"
+        tags: ["test1", "test2"]
       })
     );
     const customer = CustomerMock.object;

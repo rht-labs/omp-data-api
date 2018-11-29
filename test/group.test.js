@@ -7,7 +7,7 @@ const Group = require("../src/models/v1/group.model");
 
 describe("/groups", () => {
   const app = express();
-  require("../src/routes/group.routes")(app);
+  require("../src/routes/v1/group.routes")(app);
   it("should work", () => {
     const request = supertest(app);
     let test = request
@@ -46,7 +46,7 @@ describe("/groups", () => {
       new Group({
         group_name: "TestGroup",
         display_name: "Test Group",
-        role: "admin"
+        tags: ["test1", "test2"]
       })
     );
     const group = GroupMock.object;

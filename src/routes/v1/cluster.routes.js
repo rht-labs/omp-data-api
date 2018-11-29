@@ -4,14 +4,13 @@ const Joi = require('joi')
 const validator = require('express-joi-validation')({})
 
 const clusterSchema = Joi.object({
-  env_id: Joi.string().min(2).max(50).required(),
-  customer_id: Joi.string().min(2).max(50).required(),
   logging: Joi.boolean(),
   metrics: Joi.boolean(),
   size: Joi.string().min(2).max(6),
   ha: Joi.boolean(),
   ocp_version: Joi.string().min(2).max(10).required(),
-  hosting_platform: Joi.string().min(2).max(20).required()
+  hosting_platform: Joi.string().min(2).max(20).required(),
+  tags: Joi.array().items(Joi.string())
 })
 
 module.exports = app => {
@@ -20,9 +19,9 @@ module.exports = app => {
 
   app.get(`${prefix}/clusters`, clusters.findAll);
 
-  app.get(`${prefix}/clusters/:env_id`, clusters.findOne);
+  app.get(`${prefix}/clusters/:tags`, clusters.find);
 
-  app.put(`${prefix}/clusters/:env_id`, clusters.update);
+  app.put(`${prefix}/clusters/:tags`, clusters.update);
 
-  app.delete(`${prefix}/clusters/:env_id`, clusters.delete);
+  app.delete(`${prefix}/clusters/:tags`, clusters.delete);
 };
