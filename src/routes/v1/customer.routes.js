@@ -4,13 +4,8 @@ const Joi = require('joi')
 const validator = require('express-joi-validation')({})
 
 const customerSchema = Joi.object({
-  customer_id: Joi.string().min(2).max(50).required(),
   customer_name: Joi.string().min(2).max(50).required(),
-  start_date: Joi.date().required(),
-  end_date: Joi.date().required(),
-  cluster_url: Joi.string().min(2).max(250).required(),
-  atlassian_url: Joi.string().min(2).max(250),
-  source_control: Joi.string().min(2).max(250)
+  tags: Joi.array().items(Joi.string()) 
 })
 module.exports = app => {
 
@@ -18,9 +13,9 @@ module.exports = app => {
 
   app.get(`${prefix}/customers`, customers.findAll);
 
-  app.get(`${prefix}/customers/:customer_id`, customers.findOne);
+  app.get(`${prefix}/customers/:tags`, customers.find);
 
-  app.put(`${prefix}/customers/:customer_id`, customers.update);
+  app.put(`${prefix}/customers/:tags`, customers.update);
 
-  app.delete(`${prefix}/customers/:customer_id`, customers.delete);
+  app.delete(`${prefix}/customers/:tags`, customers.delete);
 };

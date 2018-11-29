@@ -8,7 +8,7 @@ const GroupSchema = mongoose.Schema({
     required: true
   },
   display_name: String,
-  role: String
+  tags: [String]
 });
 
 module.exports = mongoose.model("Group", GroupSchema);

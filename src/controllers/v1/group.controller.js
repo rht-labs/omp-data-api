@@ -4,7 +4,7 @@ exports.create = (req, res) => {
   const group = new Group({
     group_name: req.body.group_name.toLowerCase(),
     display_name: req.body.display_name,
-    role: req.body.role.toLowerCase()
+    tags: req.body.tags,
   });
 
   group
@@ -14,7 +14,7 @@ exports.create = (req, res) => {
     })
     .catch(err => {
       res.status(500).send({
-        message: err.message || "An error occured."
+        message: err.message || "An error occurred."
       });
     });
 };
@@ -26,39 +26,39 @@ exports.findAll = (req, res) => {
     })
     .catch(err => {
       res.status(500).send({
-        message: err.message || "An error occured."
+        message: err.message || "An error occurred."
       });
     });
 };
 
-exports.findOne = (req, res) => {
-  if (!req.params.group_name) {
+exports.find = (req, res) => {
+  if (!req.params.tags) {
     res.status(400).send({
-      message: "You must provide an environment id parameter."
+      message: "You must provide a tags parameter."
     });
     return;
   }
   Group.find({
-      group_name: req.params.group_name.toLowerCase()
+      tags: {$all: req.params.tags.split(',')}
     })
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
-        message: err.message || "An error occured."
+        message: err.message || "An error occurred."
       });
     });
 };
 
 exports.update = (req, res) => {
-  if (!req.params.group_name) {
+  if (!req.params.tags) {
     res.status(400).send({
-      message: "You must provide an environment id parameter."
+      tags: {$all: req.params.tags.split(',')}
     });
     return;
   }
-  Group.updateOne({
+  Group.updateMany({
       group_name: req.params.group_name.toLowerCase()
     }, req.body)
     .then(data => {
@@ -66,27 +66,27 @@ exports.update = (req, res) => {
     })
     .catch(err => {
       res.status(500).send({
-        message: err.message || "An error occured."
+        message: err.message || "An error occurred."
       });
     });
 };
 
 exports.delete = (req, res) => {
-  if (!req.params.group_name) {
+  if (!req.params.tags) {
     res.status(400).send({
-      message: "You must provide an environment id parameter."
+      message: "You must provide a tags parameter."
     });
     return;
   }
-  Group.deleteOne({
-      group_name: req.params.group_name.toLowerCase()
+  Group.deleteMany({
+      tags: {$all: req.params.tags.split(',')}
     })
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
-        message: err.message || "An error occured."
+        message: err.message || "An error occurred."
       });
     });
 };

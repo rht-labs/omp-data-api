@@ -1,6 +1,6 @@
 # OMP Database Schema
 
-The OMP backend currently is built on a mongodb backend. It consists of four collections: `users`,`customers`, `clusters`, `residencies`, and `groups`. You can see the schemas of these collections below:
+The OMP backend currently is built on a mongodb backend. It consists of five collections: `users`,`customers`, `clusters`, `residencies`, and `groups`. You can see the schemas of these collections below:
 
 * db.users
 
@@ -41,6 +41,7 @@ The OMP backend currently is built on a mongodb backend. It consists of four col
 ```
 
 * db.clusters
+
 ```
 {
     _id: <ObjectId>,
@@ -55,6 +56,7 @@ The OMP backend currently is built on a mongodb backend. It consists of four col
 ```
 
 * db.residencies
+
 ```
 {
     _id: <ObjectId>,

@@ -1,12 +1,17 @@
-const Customer = require("../../models/v1/customer.model.js");
+const Residency = require("../../models/v1/residency.model.js");
 
 exports.create = (req, res) => {
   // Set defaults
-  const customer = new Customer({
-    customer_name: req.body.customer_name,
+
+  const residency = new Residency({
+    start_date: req.body.start_date,
+    end_date: req.body.end_date,
+    cluster_ref: req.body.cluster_ref,
+    source_control: req.body.source_control,
+    name: req.body.name,
     tags: req.body.tags
   });
-  customer
+  residency
     .save()
     .then(data => {
       res.send(data);
@@ -19,7 +24,7 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  Customer.find({})
+  Residency.find({})
     .then(data => {
       res.send(data);
     })
@@ -37,7 +42,7 @@ exports.find = (req, res) => {
     });
     return;
   }
-  Customer.find({
+  Residency.find({
       tags: {$all: req.params.tags.split(',')}
     })
     .then(data => {
@@ -57,11 +62,9 @@ exports.update = (req, res) => {
     });
     return;
   }
-  Customer.updateMany({
-        tags: {$all: req.params.tags.split(',')}
-      },
-      req.body
-    )
+  Residency.updateMany({
+      tags: {$all: req.params.tags.split(',')}
+    }, req.body)
     .then(data => {
       res.send(data);
     })
@@ -79,7 +82,7 @@ exports.delete = (req, res) => {
     });
     return;
   }
-  Customer.deleteMany({
+  Residency.deleteMany({
       tags: {$all: req.params.tags.split(',')}
     })
     .then(data => {

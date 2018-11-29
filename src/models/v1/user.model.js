@@ -11,16 +11,8 @@ const UserSchema = mongoose.Schema({
   last_name: String,
   expiration_date: Date,
   email: String,
-  role: String,
-  identity_providers: [
-    {
-      provider: String,
-      created: Boolean,
-      notified: Boolean
-    }
-  ],
-  groups: [String],
-  customers: [String]
+  identity_providers: Object, // There is a 'gotcha' here. See `markModified`: https://mongoosejs.com/docs/schematypes.html#mixed
+  tags: [String]
 });
 
 module.exports = mongoose.model("User", UserSchema);

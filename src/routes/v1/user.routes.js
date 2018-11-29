@@ -4,19 +4,13 @@ const Joi = require('joi')
 const validator = require('express-joi-validation')({})
 
 const userSchema = Joi.object({
-  username: Joi.string().min(2).max(50).required(),
+  user_name: Joi.string().min(2).max(50).required(),
   first_name: Joi.string().min(2).max(50).required(),
   last_name: Joi.string().min(2).max(50).required(),
   expiration_date: Joi.date(),
   email: Joi.string().email().required(),
-  role: Joi.string(),
-  identity_providers: Joi.array().items(Joi.object().keys({
-    provider: Joi.string(),
-    created: Joi.boolean(),
-    notified: Joi.boolean()
-  })),
-  groups: Joi.array().items(Joi.string()),
-  customers: Joi.array().items(Joi.string())
+  identity_providers: Joi.any(),
+  tags: Joi.array().items(Joi.string())
 })
 
 module.exports = app => {
@@ -25,9 +19,9 @@ module.exports = app => {
 
   app.get(`${prefix}/users`, users.findAll);
 
-  app.get(`${prefix}/users/:user_name`, users.findOne);
+  app.get(`${prefix}/users/:tags`, users.find);
 
-  app.put(`${prefix}/users/:user_name`, users.update);
+  app.put(`${prefix}/users/:tags`, users.update);
 
-  app.delete(`${prefix}/users/:user_name`, users.delete);
+  app.delete(`${prefix}/users/:tags`, users.delete);
 };
