@@ -44,7 +44,7 @@ objects:
         - envFrom:
             - secretRef:
                 name: "${DB_SECRET}"
-                key: "database-connection-string"
+                key: "DATABASE_CONNECTION_STRING"
           image: "${NAME}"
           imagePullPolicy: Always
           name: "${NAME}"

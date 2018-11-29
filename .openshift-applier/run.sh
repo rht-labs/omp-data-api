@@ -1,3 +1,4 @@
+#!/bin/bash
 docker run -u `id -u` \
   -v $HOME/.kube/config:/openshift-applier/.kube/config:z \
   -v $PWD:/tmp/src \

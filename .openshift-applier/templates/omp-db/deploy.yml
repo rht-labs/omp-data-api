@@ -11,11 +11,11 @@ objects:
       labels:
         template: "${APP_NAME}"
     stringData:
-      database-admin-password: ${MONGODB_ADMIN_PASSWORD}
-      database-name: ${MONGODB_DATABASE}
-      database-password: ${MONGODB_PASSWORD}
-      database-user: ${MONGODB_USER}
-      database-connection-string: "mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${APP_NAME}:27017/${MONGODB_DATABASE}"
+      DATABASE_ADMIN_PASSWORD: ${MONGODB_ADMIN_PASSWORD}
+      DATABASE_NAME: ${MONGODB_DATABASE}
+      DATABASE_PASSWORD: ${MONGODB_PASSWORD}
+      DATABASE_USER: ${MONGODB_USER}
+      DATABASE_CONNECTION_STRING: "mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${APP_NAME}:27017/${MONGODB_DATABASE}"
 
   # A headless service to create DNS records
   - kind: Service
@@ -66,22 +66,22 @@ objects:
             - name: MONGODB_USER
               valueFrom:
                 secretKeyRef:
-                  key: database-user
+                  key: DATABASE_USER
                   name: ${APP_NAME}
             - name: MONGODB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: database-password
+                  key: DATABASE_PASSWORD
                   name: ${APP_NAME}
             - name: MONGODB_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: database-admin-password
+                  key: DATABASE_ADMIN_PASSWORD
                   name: ${APP_NAME}
             - name: MONGODB_DATABASE
               valueFrom:
                 secretKeyRef:
-                  key: database-name
+                  key: DATABASE_NAME
                   name: ${APP_NAME}
             image: ' '
             imagePullPolicy: IfNotPresent
