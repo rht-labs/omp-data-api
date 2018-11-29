@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 
 mongoose
   .connect(
-    process.env.MONGO_URL, {
+    process.env.DATABASE_CONNECTION_STRING, {
       useNewUrlParser: true
     }
   )
