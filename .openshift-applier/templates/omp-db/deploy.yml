@@ -15,13 +15,13 @@ objects:
       database-name: ${MONGODB_DATABASE}
       database-password: ${MONGODB_PASSWORD}
       database-user: ${MONGODB_USER}
-      database-connection-string: "mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}:27017/${MONGODB_DATABASE}"
+      database-connection-string: "mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${APP_NAME}:27017/${MONGODB_DATABASE}"
 
   # A headless service to create DNS records
   - kind: Service
     apiVersion: v1
     metadata:
-      name: "${APP_NAME}-internal"
+      name: "${APP_NAME}"
       annotations:
         service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
     spec:
