@@ -58,7 +58,7 @@ exports.update = (req, res) => {
     });
     return;
   }
-  Group.updateOne({
+  Group.updateMany({
       group_name: req.params.group_name.toLowerCase()
     }, req.body)
     .then(data => {
@@ -78,7 +78,7 @@ exports.delete = (req, res) => {
     });
     return;
   }
-  Group.deleteOne({
+  Group.deleteMany({
       tags: {$all: req.params.tags.split(',')}
     })
     .then(data => {

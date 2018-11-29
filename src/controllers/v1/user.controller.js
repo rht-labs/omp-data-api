@@ -69,7 +69,7 @@ exports.update = (req, res) => {
     });
     return;
   }
-  User.updateOne({
+  User.updateMany({
       tags: {$all: req.params.tags.split(',')}
     }, req.body)
     .then(data => {
@@ -89,7 +89,7 @@ exports.delete = (req, res) => {
     });
     return;
   }
-  User.deleteOne({
+  User.deleteMany({
       tags: {$all: req.params.tags.split(',')}
     })
     .then(data => {

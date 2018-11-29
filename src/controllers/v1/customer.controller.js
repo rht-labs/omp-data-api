@@ -57,7 +57,7 @@ exports.update = (req, res) => {
     });
     return;
   }
-  Customer.updateOne({
+  Customer.updateMany({
         tags: {$all: req.params.tags.split(',')}
       },
       req.body
@@ -79,7 +79,7 @@ exports.delete = (req, res) => {
     });
     return;
   }
-  Customer.deleteOne({
+  Customer.deleteMany({
       tags: {$all: req.params.tags.split(',')}
     })
     .then(data => {

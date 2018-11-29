@@ -62,7 +62,7 @@ exports.update = (req, res) => {
     });
     return;
   }
-  Residency.updateOne({
+  Residency.updateMany({
       tags: {$all: req.params.tags.split(',')}
     }, req.body)
     .then(data => {
@@ -82,7 +82,7 @@ exports.delete = (req, res) => {
     });
     return;
   }
-  Residency.deleteOne({
+  Residency.deleteMany({
       tags: {$all: req.params.tags.split(',')}
     })
     .then(data => {

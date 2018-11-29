@@ -74,7 +74,7 @@ exports.update = (req, res) => {
     });
     return;
   }
-  Cluster.updateOne({
+  Cluster.updateMany({
       tags: {$all: req.params.tags.split(',')}
     }, req.body)
     .then(data => {
@@ -94,7 +94,7 @@ exports.delete = (req, res) => {
     });
     return;
   }
-  Cluster.deleteOne({
+  Cluster.deleteMany({
       tags: {$all: req.params.tags.split(',')}
     })
     .then(data => {
