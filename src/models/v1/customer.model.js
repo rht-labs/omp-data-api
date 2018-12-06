@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+const Joi = require('joi');
 
-const CustomerSchema = mongoose.Schema({
+const schema = mongoose.Schema({
   customer_name: {
     type: String,
     index: true,
@@ -10,4 +11,15 @@ const CustomerSchema = mongoose.Schema({
   tags: [String]
 });
 
-module.exports = mongoose.model("Customer", CustomerSchema);
+const validator = Joi.object({
+  customer_name: Joi.string().min(2).max(50).required(),
+  tags: Joi.array().items(Joi.string()) 
+})
+
+const defaults = {}
+
+module.exports = {
+  model: new mongoose.model("Customer", schema),
+  validator: validator,
+  defaults: defaults
+}

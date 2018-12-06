@@ -36,10 +36,6 @@ app.get("/", (req, res) =>
 );
 
 // Import v1 routes
-require("./routes/v1/user.routes")(app);
-require("./routes/v1/group.routes")(app);
-require("./routes/v1/customer.routes")(app);
-require("./routes/v1/cluster.routes")(app);
-require("./routes/v1/residency.routes")(app);
+require("./routes/v1/routes")(app);
 
 app.listen(port, () => console.log(`App listening on port ${port}`));

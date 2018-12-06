@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+const Joi = require('joi');
 
-const GroupSchema = mongoose.Schema({
+const schema = mongoose.Schema({
   group_name: {
     type: String,
     index: true,
@@ -11,4 +12,16 @@ const GroupSchema = mongoose.Schema({
   tags: [String]
 });
 
-module.exports = mongoose.model("Group", GroupSchema);
+const validator = Joi.object({
+  group_name: Joi.string().min(2).max(50).required(),
+  display_name: Joi.string().min(2).max(50).required(),
+  tags: Joi.array().items(Joi.string())
+})
+
+const defaults = {}
+
+module.exports = {
+  model: new mongoose.model("Group", schema),
+  validator: validator,
+  defaults: defaults
+};
