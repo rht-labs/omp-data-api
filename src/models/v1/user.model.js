@@ -31,8 +31,15 @@ const defaults = {
   expiration_date: ''
 }
 
+const mutator = body => {
+  body.user_name = body.user_name.toLowerCase();
+  body.email = body.email.toLowerCase();
+  return body;
+}
+
 module.exports = {
   model: new mongoose.model("User", schema),
   validator: validator,
-  defaults: defaults
+  defaults: defaults,
+  mutator: mutator
 };
