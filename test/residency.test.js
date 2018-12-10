@@ -3,11 +3,11 @@ const express = require("express");
 const sinon = require("sinon");
 require("sinon-mongoose");
 
-const Residency = require("../src/models/v1/residency.model");
+const Residency = require("../src/models/v1/residency.model").model;
 
 describe("/residency", () => {
   const app = express();
-  require("../src/routes/v1/residency.routes")(app);
+  require("../src/routes/v1/routes")(app);
   it("should work", () => {
     const request = supertest(app);
     let test = request
