@@ -1,0 +1,149 @@
+---
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "${APP_NAME}-aws-backup"
+  annotations:
+    description: "Scheduled task to move database backups to AWS"
+    iconClass: "icon-shadowman"
+objects:
+
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: ${APP_NAME}-aws-backup
+  spec:
+    dockerImageRepository: docker.io/mesosphere/aws-cli
+    lookupPolicy:
+      local: true
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker.io/mesosphere/aws-cli:latest
+      importPolicy: {}
+      name: "latest"
+      referencePolicy:
+        type: Source
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker.io/mesosphere/aws-cli:1.14.5
+      importPolicy: {}
+      name: "1.14.5"
+      referencePolicy:
+        type: Source
+
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: "${APP_NAME}-aws-backup-creds"
+    labels:
+      template: "${APP_NAME}-aws-backup"
+  stringData:
+    AWS_ACCESS_KEY_ID: ${AWS_ID}
+    AWS_SECRET_ACCESS_KEY: ${AWS_KEY}
+    AWS_DEFAULT_REGION: ${AWS_REGION}
+
+- kind: "CronJob"
+  apiVersion: "batch/v1beta1"
+  metadata:
+    name: "${APP_NAME}-aws-backup"
+    labels:
+      template: "${APP_NAME}-aws-backup"
+  spec:
+    schedule: "${SCHEDULE}"
+    concurrencyPolicy: "Forbid"
+    successfulJobsHistoryLimit: "${{SUCCESS_JOBS_HISTORY_LIMIT}}"
+    failedJobsHistoryLimit: "${{FAILED_JOBS_HISTORY_LIMIT}}"
+    jobTemplate:
+      spec:
+        template:
+          spec:
+            containers:
+              - name: "${APP_NAME}-aws-backup"
+                image: "${APP_NAME}-aws-backup:latest"
+                command:
+                - /bin/sh
+                - -i
+                - -c
+                - aws s3 sync ${BACKUP_PATH} s3://${AWS_BUCKET_NAME}
+                envFrom:
+                  - name: AWS_ID
+                    secretRef:
+                      name: "${APP_NAME}-aws-backup-creds"
+                      key: AWS_ACCESS_KEY_ID
+                  - name: AWS_KEY
+                    secretRef:
+                      key: AWS_SECRET_ACCESS_KEY
+                      name: "${APP_NAME}-aws-backup-creds"
+                  - name: AWS_REGION
+                    secretRef:
+                      key: AWS_DEFAULT_REGION
+                      name: ${APP_NAME}-aws-backup-creds
+                volumeMounts:
+                  - mountPath: "${BACKUP_PATH}"
+                    name: "${APP_NAME}-backup"
+            volumes:
+              - name: ${APP_NAME}-backup 
+                persistentVolumeClaim:
+                  claimName: "${APP_NAME}-backup"
+            restartPolicy: "Never"
+            terminationGracePeriodSeconds: 30
+            activeDeadlineSeconds: 500
+            dnsPolicy: "ClusterFirst"
+
+parameters:
+  - name: "APP_NAME"
+    displayName: "Job Name"
+    description: "Name of the Scheduled Job to Create."
+    value: "omp-db"
+    required: true
+
+  - name: "SCHEDULE"
+    displayName: "Cron Schedule"
+    description: "Cron Schedule to Execute the Job"
+    value: "@hourly"
+    required: true
+
+  - name: "SUCCESS_JOBS_HISTORY_LIMIT"
+    displayName: "Successful Job History Limit"
+    description: "The number of successful jobs that will be retained"
+    value: "5"
+    required: true
+
+  - name: "FAILED_JOBS_HISTORY_LIMIT"
+    displayName: "Failed Job History Limit"
+    description: "The number of failed jobs that will be retained"
+    value: "5"
+    required: true
+
+  - name: BACKUP_PATH
+    displayName: "DB Backup Path"
+    description: "Backup Path for MongoDB exports"
+    required: true
+    value: /opt/app-root/src
+
+  - name: AWS_ID
+    displayName: "AWS Access ID"
+    description: "Access ID to authenticate to AWS"
+    required: true
+
+  - name: AWS_KEY
+    displayName: "AWS Access Key"
+    description: "Access key to authenticate to AWS"
+    required: true
+
+  - name: AWS_REGION
+    displayName: "Default AWS Region"
+    description: "Default AWS Region to use"
+    required: true
+
+  - name: AWS_BUCKET_NAME
+    displayName: "Name of AWS Bucket"
+    description: "Name of bucket to sync database restores to"
+    required: true
+    value: "my-test-bucket"
+
+labels:
+  template: "${APP_NAME}-aws-backup"
