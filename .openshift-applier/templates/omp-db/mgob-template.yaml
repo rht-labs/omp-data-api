@@ -1,0 +1,174 @@
+---
+apiVersion: v1
+kind: Template
+metadata:
+  name: "${NAME}-mgob-template"
+objects:
+-  kind: ConfigMap
+   apiVersion: v1
+   metadata:
+     labels:
+       role: "${NAME}-mgob-backup"
+       name: "${NAME}-mgob"
+     name: "${NAME}-mgob-config"
+     namespace: ${NAMESPACE}
+   data:
+     backup.yml: |
+       target:
+         host: "${MONGODB_SVC}"
+         port: ${MONGODB_PORT} 
+         database: "${MONGODB_DATABASE}"
+         username: "${MONGODB_USERNAME}"
+         password: "${MONGODB_PASSWORD}"
+       scheduler:
+         cron: "${SCHEDULE}"
+         retention: ${BACKUP_RETENTION}
+         timeout: ${BACKUP_TIMEOUT}
+       s3:
+         url: "${BACKUP_BUCKET_URL}"
+         bucket: "${BACKUP_BUCKET_NAME}"
+         accessKey: "${BACKUP_ACCESSKEY}"
+         secretKey: "${BACKUP_SECRETKEY}"
+         api: "${S3_PROTOCOL}"
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: "${NAME}-mgob-storage"
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${BACKUP_VOLUME_CAPACITY}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: "${NAME}-mgob-tmp"
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${TMP_VOLUME_CAPACITY}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: "${NAME}-mgob-data"
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${DATA_VOLUME_CAPACITY}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: "${NAME}-mgob"
+    namespace: ${NAMESPACE}
+    labels:
+      name: "${NAME}-mgob"
+  spec:
+    ports:
+    - port: 8090
+      targetPort: 8090
+    clusterIP: None
+    selector:
+      role: "${NAME}-mgob-backup"
+- apiVersion: apps/v1beta2
+  kind: StatefulSet
+  metadata:
+    name: "${NAME}-mgob"
+    namespace: "${NAMESPACE}"
+  spec:
+    serviceName: "${NAME}-mgob"
+    replicas: 1
+    selector:
+      matchLabels:
+        role: "${NAME}-mgob-backup"
+    template:
+      metadata:
+        labels:
+          role: "${NAME}-mgob-backup"
+      spec:
+        containers:
+        - name: mgobd
+          image: "${NAME}-mgob:latest"
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8090
+            protocol: TCP
+          volumeMounts:
+          - name: "${NAME}-mgob-tmp"
+            mountPath: /tmp
+          - name: "${NAME}-mgob-data"
+            mountPath: /data
+          - mountPath: /config/backup.yml
+            name: mgob-config
+            subPath: backup.yml
+          - mountPath: /storage
+            name: "${NAME}-mgob-storage"
+        volumes:
+          - name: mgob-config
+            configMap:
+              name: "${NAME}-mgob-config"
+              items:
+                - key: backup.yml
+                  path: backup.yml
+          - name: ${NAME}-mgob-data
+            persistentVolumeClaim:
+              claimName: "${NAME}-mgob-data"
+          - name: "${NAME}-mgob-tmp"
+            persistentVolumeClaim:
+              claimName: "${NAME}-mgob-tmp"
+          - name: "${NAME}-mgob-storage"
+            persistentVolumeClaim:
+              claimName: "${NAME}-mgob-storage"
+parameters:
+- name: NAME
+  description: Name of the Application
+  value: "mgob"
+  required: true
+- name: NAMESPACE
+  description: Namespace of the Application
+  value: "mgob"
+  required: true
+- name: BACKUP_VOLUME_CAPACITY
+  description: Size of pvc to store backups
+  value: 1Gi
+- name: TMP_VOLUME_CAPACITY
+  description: Size of pvc to store tmp space
+  value: 1Gi
+- name: DATA_VOLUME_CAPACITY
+  description: Size of pvc to store data
+  value: 1Gi
+- name: MONGODB_SVC
+  description: Service name of the MongoDB database to connect to
+  value: "mongo"
+- name: MONGODB_PORT
+  description: MongoDB port to connect on
+- name: MONGODB_USERNAME
+  description: Name of user with sufficient privileges to perform backup
+  value: "admin"
+- name: MONGODB_PASSWORD
+  descripiton: Password of user with sufficient privileges to perform backup
+  value: "admin"
+- name: MONGODB_DATABASE
+  description: Name of database to connect to (leave empty to back up all?)
+  value: ""
+- name: SCHEDULE
+  description: Cron schedule for the backups to follow
+  value: ""
+- name: BACKUP_RETENTION
+  description: Number of backups to keep
+- name: BACKUP_TIMEOUT
+  description: Time (in seconds) before the backup will timeout
+- name: BACKUP_BUCKET_URL
+  description: URL of the location of your s3 bucket
+- name: BACKUP_BUCKET_NAME
+  description: Name of the s3 bucket you wish to use
+- name: BACKUP_ACCESSKEY
+  description: Access key with permissions to your s3 bucket
+- name: BACKUP_SECRETKEY
+  description: Secret key with permissions to your s3 bucket
+- name: S3_PROTOCOL
+  description: S3 Protocol to be used for backup  
