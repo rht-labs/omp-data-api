@@ -1,0 +1,6 @@
+---
+- name:
+  hosts: seed-hosts
+  tasks:
+    - include_role:
+        name: openshift-applier/roles/openshift-applier

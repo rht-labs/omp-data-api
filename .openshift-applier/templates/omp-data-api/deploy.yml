@@ -41,10 +41,9 @@ objects:
           name: "${NAME}"
       spec:
         containers:
-        - envFrom:
-            - secretRef:
-                name: "${DB_SECRET}"
-                key: "DATABASE_CONNECTION_STRING"
+        - env:
+          - name: "DATABASE_CONNECTION_STRING"
+            value: "${DATABASE_CONNECTION_STRING}"
           image: "${NAME}"
           imagePullPolicy: Always
           name: "${NAME}"
@@ -125,9 +124,9 @@ parameters:
   displayName: Project/Namespace for Jenkins Pipelines
   description: The project/namespace where the Jenkins executing pipelines is deployed.
   required: true
-- name: DB_SECRET
-  displayName: Database Secret
-  description: Database secret name to pull environment variables from.
+- name: DATABASE_CONNECTION_STRING
+  displayName: DB connection string
+  description: Database connection string
   value: mongo
   required: true
 labels:

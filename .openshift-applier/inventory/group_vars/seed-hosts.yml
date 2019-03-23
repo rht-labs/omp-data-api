@@ -19,32 +19,42 @@ build:
   PIPELINE_SOURCE_REPOSITORY_REF: master
   S2I_BASE_IMAGE: nodejs:10
 
+mgob_build:
+  NAME: "{{ app_name }}-mgob"
+  SOURCE_REPOSITORY_URL: https://github.com/tylerauerbeck/mgob
+  SOURCE_REPOSITORY_REF: master
+
 deploy:
   NAME: "{{ app_name }}"
   PIPELINES_NAMESPACE: "{{ ci_cd_namespace }}"
-  DB_SECRET: "{{ app_name }}-db" #TODO: does this need to be an encrypted secret?
+  DATABASE_CONNECTION_STRING: "mongodb://{{ db_deploy.MONGODB_USER }}:{{ db_deploy.MONGODB_PASSWORD }}@{{ db_deploy.DATABASE_SERVICE_NAME}}:27017/{{ db_deploy.MONGODB_DATABASE }}"
 
 db_deploy:
-  APP_NAME: "{{ app_name }}-db"
   MONGODB_USER: "omp-user"
-  MONGODB_DATABASE: "{{ app_name }}"
+  MONGODB_DATABASE: "{{ app_name }}-db"
   MONGODB_VERSION: "3.4"
   VOLUME_CAPACITY: "5Gi"
   MEMORY_LIMIT: "512Mi"
-  IMAGESTREAM_NAMESPACE: "openshift" 
+  DATABASE_SERVICE_NAME: "{{ app_name }}-mongo"
+  MONGODB_PASSWORD: "user-password"
+  MONGODB_ADMIN_PASSWORD: "admin-password"
 
-backup_deploy:
-  APP_NAME: "{{ app_name }}-db"
-  SCHEDULE: "@hourly"
-  SUCCESS_JOBS_HISTORY_LIMIT: 2
-  FAILED_JOBS_HISTORY_LIMIT: 2
-  MONGODB_VERSION: "3.4"
-  VOLUME_CAPACITY: "1Gi"
-  BACKUP_PATH: "/opt/app-root/src"
-  AWS_ID: "my-id"
-  AWS_KEY: "my-key"
-  AWS_REGION: "us-east-1"
-  AWS_BUCKET_NAME: "my-bucket"
+mgob_deploy:
+  NAME: "{{ app_name }}"
+  NAMESPACE: "{{ dev_namespace }}"
+  MONGODB_SVC: "{{ db_deploy.DATABASE_SERVICE_NAME }}"
+  MONGODB_PORT: 27017
+  MONGODB_USERNAME: "admin"
+  MONGODB_PASSWORD: "{{ db_deploy.MONGODB_ADMIN_PASSWORD }}"
+  MONGODB_DATABASE: "{{ db_deploy.MONGODB_DATABASE }}"
+  SCHEDULE: "0 0 1 * *"
+  BACKUP_RETENTION: 5
+  BACKUP_TIMEOUT: 60
+  BACKUP_BUCKET_URL: "https://s3.amazonaws.com/"
+  BACKUP_BUCKET_NAME: "my-test-bucket"
+  BACKUP_ACCESSKEY: "my-test-access-key"
+  BACKUP_SECRETKEY: "my-test-secret-key"
+  S3_PROTOCOL: "S3v4"
 
 openshift_cluster_content:
   - object: projectrequest
@@ -69,6 +79,23 @@ openshift_cluster_content:
         namespace: "{{ ci_cd_namespace }}"
         tags:
           - app-build
+      - name: "{{ app_name }}-mgob-build"
+        template: "{{ inventory_dir }}/../templates/omp-db/build.yaml" 
+        params_from_vars: "{{ mgob_build }}"
+        namespace: "{{ dev_namespace }}"
+        tags:
+          - mgob-build
+
+  - object: db-deploy
+    content:
+      - name: "{{ app_name }}-db-deploy-{{ dev_namespace }}"
+        template: "openshift//mongodb-persistent"
+        params_from_vars: "{{ db_deploy }}"
+        namespace: "{{ dev_namespace }}"
+        tags:
+          - db-deploy
+          - mongo-deploy
+
   - object: app-deploy
     content:
       - name: "{{ app_name }}-deploy-{{ dev_namespace }}"
@@ -77,32 +104,10 @@ openshift_cluster_content:
         namespace: "{{ dev_namespace }}"
         tags:
           - app-deploy
-
-  - object: db-deploy
-    content:
-      - name: "{{ app_name }}-db-deploy-{{ dev_namespace }}"
-        template: "{{ inventory_dir }}/../templates/omp-db/deploy.yml"
-        params_from_vars: "{{ db_deploy }}"
+      - name: "{{ app_name }}"
+        template: "{{ inventory_dir }}/../templates/omp-db/mgob-template.yaml" 
+        params_from_vars: "{{ mgob_deploy }}"
         namespace: "{{ dev_namespace }}"
         tags:
-          - db-deploy
+          - mgob-deploy
           - mongo-deploy
-
-  - object: backup-deploy
-    content:
-      - name: "{{ app_name }}-backup-deploy-{{ dev_namespace }}"
-        template: "{{ inventory_dir }}/../templates/omp-db/db-backup.yml"
-        params_from_vars: "{{ backup_deploy }}"
-        namespace: "{{ dev_namespace }}"
-        tags:
-          - db-deploy
-          - backup-deploy
-          - db-backup-deploy
-      - name: "{{ app_name }}-aws-backup-deploy-{{dev_namespace }}"
-        template: "{{ inventory_dir }}/../templates/omp-db/aws-backup.yml"
-        params_from_vars: "{{ backup_deploy }}"
-        namespace: "{{ dev_namespace }}"
-        tags:
-          - aws-backup-deploy
-          - backup-deploy
-          - db-deploy
