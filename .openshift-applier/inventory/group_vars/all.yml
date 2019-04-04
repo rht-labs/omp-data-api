@@ -50,13 +50,13 @@ openshift_cluster_content:
   - object: projectrequest
     content:
       - name: "{{ ci_cd_namespace }}-project"
-        template: "https://raw.githubusercontent.com/redhat-cop/cluster-lifecycle/v3.10.0/files/projectrequest/template.yml"
+        template: "https://raw.githubusercontent.com/redhat-cop/cluster-lifecycle/v3.11.0/files/projectrequest/template.yml"
         action: create
         params_from_vars: "{{ ci_cd }}"
         tags:
           - projectrequest
       - name: "{{ dev_namespace }}-project"
-        template: "https://raw.githubusercontent.com/redhat-cop/cluster-lifecycle/v3.10.0/files/projectrequest/template.yml"
+        template: "https://raw.githubusercontent.com/redhat-cop/cluster-lifecycle/v3.11.0/files/projectrequest/template.yml"
         action: create
         params_from_vars: "{{ dev }}"
         tags:
@@ -64,7 +64,7 @@ openshift_cluster_content:
   - object: app-build
     content:
       - name: "{{ app_name }}-build"
-        template: "https://raw.githubusercontent.com/rht-labs/labs-ci-cd/v3.10.0/openshift-templates/s2i-app-build/template-no-secrets.yml"
+        template: "https://raw.githubusercontent.com/rht-labs/openshift-templates/v1.3.2/s2i-app-build/binary-template-no-secrets.yml"
         params_from_vars: "{{ build }}"
         namespace: "{{ ci_cd_namespace }}"
         tags:
