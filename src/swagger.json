@@ -6,10 +6,27 @@
     "description": "Open Management Portal for Swagger",
     "termsOfService": "http://swagger.io/terms/"
   },
-  "basePath": "/",
-  "tags" : [
-    {"name": "Tag1", 
-    "description": "API for something"
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Residency members"
+    },
+    {
+      "name": "Customers",
+      "description": "Labs Customer Name"
+    },
+    {
+      "name": "Clusters",
+      "description": "OpenShift Cluster Specifics"
+    },
+    {
+      "name": "Residencies",
+      "description": "Name and information about a Residency"
+    },
+    {
+      "name": "Groups",
+      "description": "Group name"
     }
   ],
   "schemes": [
@@ -22,149 +39,562 @@
     "application/json"
   ],
   "paths": {
-    "/path/to/method": {
-       "post": {
-          "tags": ["Tag1"],
-          "description": "what this API does",
-          "operationId": "for the URL",
-          "produces": [
-            "application/json"
-          ],
-          "parameters": [
-              {
-                "name": "Job Parameters",
-                "in": "body",
-                "description": "Job to add to the database",
-                "required": true,
-              "schema": {
-                "$ref": "#/definitions/create"
-                }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "create response",
-              "schema": {
-                 "$ref": "#/definitions/response"
-              }
+    "/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "Returns the status of something",
+        "operationId": "get_user",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "ID to fetch",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response",
+            "schema": {
+              "$ref": "#/definitions/customers"
             }
           }
         }
-    },
-    "/path/to/method/{someVariable}": {
-        "delete":{
-          "tags":["Tag1"],
-          "description":"Deletes a something",
-          "operationId":"delete",
-          "produces": [
-            "application/json"
-          ],
-          "parameters":[
-              {
-                "name": "someVariable",
-                "in": "path",
-                "description": "ID to delete",
-                "required": true,
-                "type": "string"
-              }
-            ],
-          "responses": {
-            "200": {
-              "description": "delete response",
-              "schema":{
-                "$ref":"#/definitions/deleteRes"
-              }
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "description": "what this API does",
+        "operationId": "post_user",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Job Parameters",
+            "in": "body",
+            "description": "Job to add to the database",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/customers"
             }
           }
-        },
-      "get":{
-          "tags": [ "Tag1"],
-          "description": "Returns the status of something",
-          "operationId": "findById",
-          "produces": [
-            "application/json"
-          ],
-          "parameters": [
-              {
-                "name": "ID",
-                "in": "path",
-                "description": "ID to fetch",
-                "required": true,
-                "type": "string"
-              }
-            ],
+        ],
         "responses": {
-            "200": {
-              "description": "response",
-              "schema": {
-                "$ref": "#/definitions/response1"
-              }
+          "200": {
+            "description": "create response",
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "description": "Deletes a something",
+        "operationId": "delete_user",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "someVariable",
+            "in": "path",
+            "description": "ID to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "delete response",
+            "schema": {
+              "$ref": "#/definitions/customers"
             }
           }
         }
       }
+    },
+    "/customers": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "description": "Returns the status of something",
+        "operationId": "get_customer",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "ID to fetch",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response",
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Customers"
+        ],
+        "description": "what this API does",
+        "operationId": "post_customer",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Job Parameters",
+            "in": "body",
+            "description": "Job to add to the database",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "create response",
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Customers"
+        ],
+        "description": "Deletes a something",
+        "operationId": "delete_customer",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "someVariable",
+            "in": "path",
+            "description": "ID to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "delete response",
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        }
+      }
+    },
+    "/clusters": {
+      "get": {
+        "tags": [
+          "Clusters"
+        ],
+        "description": "Returns the status of something",
+        "operationId": "get_cluster",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "ID to fetch",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response",
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Clusters"
+        ],
+        "description": "what this API does",
+        "operationId": "post_cluster",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Job Parameters",
+            "in": "body",
+            "description": "Job to add to the database",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "create response",
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Clusters"
+        ],
+        "description": "Deletes a something",
+        "operationId": "delete_cluster",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "someVariable",
+            "in": "path",
+            "description": "ID to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "delete response",
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        }
+      }
+    },
+    "/residencies": {
+      "get": {
+        "tags": [
+          "Residencies"
+        ],
+        "description": "Returns the status of something",
+        "operationId": "get_residency",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "ID to fetch",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response",
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Residencies"
+        ],
+        "description": "what this API does",
+        "operationId": "post_residency",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Job Parameters",
+            "in": "body",
+            "description": "Job to add to the database",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "create response",
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Residencies"
+        ],
+        "description": "Deletes a something",
+        "operationId": "delete_residency",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "someVariable",
+            "in": "path",
+            "description": "ID to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "delete response",
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        }
+      }
+    },
+    "/groups": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Returns the status of something",
+        "operationId": "get_group",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "ID to fetch",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response",
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "what this API does",
+        "operationId": "post_group",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Job Parameters",
+            "in": "body",
+            "description": "Job to add to the database",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "create response",
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Deletes a something",
+        "operationId": "delete_group",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "someVariable",
+            "in": "path",
+            "description": "ID to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "delete response",
+            "schema": {
+              "$ref": "#/definitions/customers"
+            }
+          }
+        }
+      }
+    }
   },
   "definitions": {
-    "create": {
+    "users": {
+      "type": "object",
       "properties": {
-        "eventId": {
-          "required":true,
-          "type": "string",
-          "example": "mathmaticial"
+        "id": {
+          "type": "integer",
+          "format": "int64"
         },
-        "numberRequired": {
-          "required":true,
-          "type":"integer",
-          "format": "int64",
-          "example": 500
-        } 
-      }
-    },
-    "response1": {
-        "properties": {
-          "jobID": {
-            "required":true,
-            "type": "string",
-            "example": "23423456543"
-          },
-          "request": {
-            "required":true,
-            "type": "schema",
-            "example": {
-              "eventId":"mathmaticial",
-              "numberRequired": 500
-            }
+        "user_name": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "expiration_date": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "identity_providers": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
+        }
       }
     },
-    "response": {
-        "properties": {
-            "jobID": {
-              "required": true,
-              "type" : "string",
-              "example" : "12321432423"
-            }
+    "customers": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "customer_name": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
+      }
     },
-    "delete": {
-        "properties": {
-            "jobID": {
-              "required": true,
-              "type" : "string",
-              "example" : "234344234234"
-            },
-            "status" : {
-              "required": true,
-              "type": "string",
-              "example": "deleted"
-            }
+    "clusters": {
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "logging": {
+          "type": "boolean"
+        },
+        "metrics": {
+          "type": "boolean"
+        },
+        "size": {
+          "type": "string"
+        },
+        "ha": {
+          "type": "boolean"
+        },
+        "ocp_version": {
+          "type": "string"
+        },
+        "hosting_platform": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
+      }
     },
-    "400error" : {
-       "properties": {
-        "message": {
-          "type": "string",
-          "example" : "400 Bad Request"
+    "residencies": {
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "start_date": {
+          "type": "string"
+        },
+        "end_date": {
+          "type": "string"
+        },
+        "cluster_ref": {
+          "type": "string"
+        },
+        "source_control": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "groups": {
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "group_name": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     }
